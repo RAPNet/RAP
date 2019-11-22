@@ -23,7 +23,7 @@ Please first download the COCO panoptic segmentation dataset. And you will have 
 
 ### Panoptic segmentation annotations
 
-COCO provides `panoptic_train2017.json` and `panoptic_val2017.json` annotations as well as corresponding `.png` images. Each segment (either thing or stuff) has an unique id in `.json` file and is colored as [R,G,B] in the `.png` image, where  **id=R+G\*256+B\*256^2**.  More information can be found [here](http://cocodataset.org/#format-data).
+COCO provides `panoptic_train2017.json` and `panoptic_val2017.json` annotations as well as corresponding `.png` images for panoptic segmentation task. Each segment (either thing or stuff) has an unique id in `.json` file and is colored as [R,G,B] in the `.png` image, where  **id=R+G\*256+B\*256^2**.  More information can be found [here](http://cocodataset.org/#format-data).
 
 For panoptic segmentation annotations, **no post-process is needed.** 
 
@@ -43,7 +43,7 @@ Here we provide **two scripts** in `datasets/coco` to extract all these relation
 
 1. `retrieve_relation.py` Read panoptic and instance segmentation ground truth to produce a `.pkl` file that contains all occluded instance pairs.
 
-2. `refine_instance_json_file.py` Add a field (`overlap`) for each object to store a list of instance ids. Instances in these list are all have significant overlap with this object and is on top of (or in front of) it.
+2. `refine_instance_json_file.py` Refine the `.json` file by adding a field (`overlap`) for each object to store a list of instance ids. Instances in these list are all have significant overlap with this object and is on top of (or in front of) it.
 
 #### Refined files
 
@@ -91,7 +91,7 @@ To configure your own paths to the datasets, please follow the instruction in [m
 
 ## Perform training on COCO dataset
 
-For the following examples to work, you need to first install `panoptic_benchmark`. 
+For the following examples to work, you need to first install `RAP`. 
 
 ### Step 1: Training Panoptic FPN 
 
@@ -100,7 +100,7 @@ For the following examples to work, you need to first install `panoptic_benchmar
 **1. Run the following without modifications**
 
 ```bash
-python /path_to_panoptic_benchmark/tools/train_net.py --config-file "/path/to/config/file.yaml"
+python /path_to_RAP/tools/train_net.py --config-file "/path/to/config/file.yaml"
 ```
 we set in the configuration files a global batch size that is divided over the number of GPUs. So if we only
 have a single GPU, this means that the batch size for that GPU will be 8x larger, which might lead
@@ -151,6 +151,24 @@ Here is an example for R-50-FPN with the 1x schedule on 8 GPUS:
 export NGPUS=8
 python -m torch.distributed.launch --nproc_per_node=$NGPUS tools/test_net.py --config-file "configs/e2e_panoptic_rcnn_R_50_FPN_1x.yaml" TEST.IMS_PER_BATCH 8
 ```
+#### Checkpoints
+
+Here is an example to use our provided checkpoints (list in the next section) for testing.
+
+1. Download checkpoint (`R_50.pkl`) to `/path_to_RAP/output_coco_panoptic_R_50/`. The directory name should be the same as `OUTPUT_DIR` in `configs/e2e_panoptic_rcnn_R_50_FPN_1x.yaml` 
+
+2. create a file named `last_checkpoint` in `/path_to_RAP/output_coco_panoptic_R_50/` with content as below
+
+   ```
+   output_coco_panoptic_R_50/R_50.pkl
+   ```
+
+3. Then follow the evaluation instructions. run 
+
+   ```
+   python -m torch.distributed.launch --nproc_per_node=8 tools/test_net.py --config-file "configs/e2e_panoptic_rcnn_R_50_FPN_1x.yaml" TEST.IMS_PER_BATCH 8
+   ```
+
 ## Model Zoo and Baselines
 
 ### Hardware

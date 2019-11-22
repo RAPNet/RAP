@@ -20,8 +20,8 @@ The installation is exactly the **same** as maskrcnn-benchmark dose.  I only ins
 # for that, check that `which conda`, `which pip` and `which python` points to the
 # right path. From a clean conda env, this is what you need to do
 
-conda create --name maskrcnn_benchmark
-conda activate maskrcnn_benchmark
+conda create --name RAP
+conda activate RAP
 
 # this installs the right pip and dependencies for the fresh python
 conda install ipython
@@ -49,8 +49,8 @@ python setup.py install --cuda_ext --cpp_ext
 
 # install PyTorch Panoptic Segmentation
 cd $INSTALL_DIR
-git clone https://github.com/jimchenhub/panoptic-benchmark.git
-cd panoptic-benchmark
+git clone https://github.com/CVPR2020-RAP/RAP.git
+cd RAP
 
 # the following will install the lib with
 # symbolic links, so that you can modify
