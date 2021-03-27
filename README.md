@@ -2,6 +2,8 @@
 
 We extend the [maskrcnn-benchmark]( https://github.com/facebookresearch/maskrcnn-benchmark ) to implement the relation aware panoptic segmentation models in PyTorch 1.0.
 
+paper is available [here](https://github.com/RAPNet/RAP/blob/master/paper.pdf)
+
 <a href="url"><img src="demo/main.png" align="center" width="800" ></a>
 
 ## Highlights
